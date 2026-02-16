@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>给小徐老师 💌</title>
+    <title>小呆呆 TO 小徐老师 </title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             background-color: #fff; 
             font-family: "PingFang SC", "STSong", "Songti SC", serif; 
-            overflow: hidden; /* 禁止原生滚动，由JS控制翻页 */
-            touch-action: none; /* 禁用系统默认手势 */
+            overflow: hidden; 
+            touch-action: none;
         }
 
-        /* 基础背景：底部的山和小人 */
+        /* 背景：底部的山和小人 */
         .base-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -26,23 +26,21 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, rgba(10, 15, 30, 1) 0%, rgba(15, 23, 42, 0.9) 60%, transparent 100%);
-            opacity: 0;
-            z-index: 2;
-            transition: opacity 3s ease;
+            opacity: 0; z-index: 2; transition: opacity 3s ease;
         }
 
         #sky-decor {
             position: fixed; top: 10%; width: 100%; opacity: 0; z-index: 3; transition: opacity 4s ease;
         }
 
-        /* 文字容器：居中显示 */
+        /* 文字容器：定位在屏幕上半部分的留白区 */
         .text-container {
             position: fixed;
-            top: 45%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
+            top: 15%; /* 距离顶部15%，确保不挡住底下的山人 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
             z-index: 10;
-            text-align: justify;
         }
 
         .text-section {
@@ -51,31 +49,43 @@
             opacity: 0;
             visibility: hidden;
             transform: translateY(20px);
-            transition: all 1.5s ease; /* 渐隐渐现的时间 */
+            transition: all 1.2s ease;
             font-size: 18px;
-            line-height: 2.2;
+            line-height: 2;
             color: #334155;
+            text-align: left; /* 顶格左对齐 */
         }
 
-        /* 激活状态的文字 */
-        .text-section.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
+        .text-section.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .text-section.exit { opacity: 0; transform: translateY(-20px); }
 
-        /* 向上翻页时消失的状态 */
-        .text-section.exit {
-            opacity: 0;
-            transform: translateY(-20px);
+        /* 最后一张贺词页的特殊样式 */
+        .finale-page {
+            text-align: center !important; /* 最后一页居中显示更有仪式感 */
+            top: 10% !important;
+        }
+        .brush-font {
+            font-family: "Kaiti", "STKaiti", "楷体", serif;
+            font-size: 48px;
+            color: #b91c1c; /* 深红色，年味十足 */
+            display: block;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        .signature {
+            font-size: 18px;
+            color: #666;
+            font-style: italic;
+            margin-top: 50px;
+            display: block;
         }
 
         .night-text { color: #f1f5f9 !important; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .night-text-red { color: #ef4444 !important; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
 
-        /* 烟花 */
         canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
 
-        /* 开始页面 */
         #start-mask {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #fff; z-index: 100;
@@ -84,10 +94,8 @@
         }
         .start-btn {
             padding: 15px 40px; border: 1px solid #ddd; border-radius: 30px;
-            font-size: 16px; color: #888; cursor: pointer; background: none; outline: none;
+            font-size: 16px; color: #888; cursor: pointer; background: none;
         }
-        .hint { margin-top: 20px; font-size: 12px; color: #bbb; animation: blink 2s infinite; }
-        @keyframes blink { 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
@@ -95,7 +103,6 @@
     <div id="start-mask" onclick="go()">
         <div style="font-size: 40px; margin-bottom: 20px;">🎆</div>
         <button class="start-btn">开启小徐老师的新年贺文</button>
-        <div class="hint">点击进入后，请尝试向上滑动阅览</div>
     </div>
 
     <div class="base-bg"></div>
@@ -108,25 +115,30 @@
     <div class="text-container">
         <!-- 第一段 -->
         <div class="text-section active">
-            新年快乐，小徐老师。[烟花]<br><br>
-            当要写下这段话的时候，脑海中想说的话太多太多，竟不知道从何说起。去翻了翻我们这些日子的聊天记录，才惊觉今天刚好是我们认识的第十个日子。十天，放在整个人生的尺度里很短，短到可以忽略不计；但这十天聊天的密度和快乐的浓度，却让我有了一种与你认识了很久很久的错觉，“倾盖如故”便说的是这般罢。
+            新年快乐，小徐老师。<br><br>
+            当要写下这段话的时候，脑海中想说的话太多太多，竟不知道从何说起。翻了翻我们这些日子的聊天记录，发现今天刚好是我们认识的第十个日子。十天，放在整个人生的尺度里很短，短到可以忽略不计；但这十天聊天的密度和快乐的浓度，却让我感觉与你认识了很久很久，“倾盖如故”便说的是这般罢。
         </div>
         <!-- 第二段 -->
         <div class="text-section">
-            2026年初，本以为这又是平平淡淡的一年，等成绩、准备毕设，和我的前21年的生活一般无二；然而现在看来，遇见你，是2026年我的第一个、也是最大的彩蛋。记得跟你说过，我选择去上海多是因为我的事业发展；但是，如果现在要我再说一次，除了原来说过的理由，我会再说一句：那里有我想要见到、却还没有见到的人，便是你。
+            2026年初，本以为这又是平平淡淡的一年，等成绩、准备毕设，和我的前21年的生活一般无二；然而，现在看来，遇见你，是2026年我的第一个、也是最大的彩蛋。记得跟你说过，我选择去上海多是因为我的事业发展；但是，如果现在要我再说一次，除了原来说过的理由，我会再说一句：那里有我想要见到、却还没有见到的人，便是你。
         </div>
         <!-- 第三段 -->
         <div class="text-section">
-            说真的，我也不知道我是做了什么拯救银河系的事情，然后让我与你有了交集。以前地理书上的上海只是一个繁华的坐标，而现在，那个城市在我的地图上突然有了具体的温度。我相信我们之间不只是这短短十天的缘分，以后与你的故事还会有很多很多，我也正满心期待着。
+            说真的，我也不知道我是做了什么拯救银河系的事情，然后让我与你有了交集，我相信以后与你的故事还会有很多很多。以前地理书上的上海只是一个坐标，而现在，那个城市在我的地图上突然有了具体的温度。我正满心期待着，去见证我们接下来更多的故事。
         </div>
         <!-- 第四段 -->
         <div class="text-section">
-            好啦好啦，煽情环节就到这吧哈哈哈。最后我想说的是：虽然感觉和你认识了很久很久，但我还是想和你一起更久更久，而且我一定会朝着这个目标去努力。希望我的小徐老师呢，在新的一年里一定要天天开心，然后心中所想皆有成，一马平川无所惧！！！
+            好啦好啦，煽情环节就到这吧哈哈哈。最后我想说的是：我虽然感觉和你认识了很久很久，但是我还是想和你一起更久更久，而且我一定会朝着这个目标努力！希望我的小徐老师呢，在新的一年里一定要天天开心，然后心中所想皆有成，一马平川无所惧！！！
         </div>
-        <!-- 第五段（触发黑夜和烟花） -->
-        <div class="text-section" id="final-trigger">
-            愿新年的烟火能带去我的祝福。我的小徐老师，新年快乐！！！。<br><br>
-            <span style="font-size: 14px; opacity: 0.6;">（PS.这是我第一次写贺文哦，有些地方会词不达意，但我相信你一定可以看懂哒，你也不许说我写的不好哈哈哈！）</span>
+        <!-- 第五段 -->
+        <div class="text-section" id="pre-final">
+            愿新年的烟火能带去我的祝福。我的小徐老师，新年快乐！！！<br><br>
+            <span style="font-size: 14px; opacity: 0.6;">（PS.这是我第一次写贺文哦，有些地方会词不达意，但我相信你一定可以看懂哒，不许说我写的不好哈哈哈！）</span>
+        </div>
+        <!-- 第六段：艺术落款页 -->
+        <div class="text-section finale-page" id="final-trigger">
+            <span class="brush-font">新年快乐</span>
+            <span class="signature">Your 小张同学</span>
         </div>
     </div>
 
@@ -149,26 +161,30 @@
             if (index < 0 || index >= sections.length) return;
             isAnimating = true;
 
-            // 移除当前
             const current = document.querySelector('.text-section.active');
             current.classList.add('exit');
             current.classList.remove('active');
 
             setTimeout(() => {
                 current.classList.remove('exit');
-                // 激活新的一段
                 sections[index].classList.add('active');
                 
-                // 检查是否最后一段触发特效
-                if (sections[index].id === 'final-trigger') {
-                    document.getElementById('night-mask').style.opacity = '1';
-                    document.getElementById('sky-decor').style.opacity = '1';
+                // 触发特效逻辑
+                const nightMask = document.getElementById('night-mask');
+                const skyDecor = document.getElementById('sky-decor');
+                
+                if (sections[index].id === 'final-trigger' || sections[index].id === 'pre-final') {
+                    nightMask.style.opacity = '1';
+                    skyDecor.style.opacity = '1';
                     sections[index].classList.add('night-text');
+                    // 如果是最后一页，字变成发光的红色
+                    if(sections[index].id === 'final-trigger') {
+                        sections[index].querySelector('.brush-font').classList.add('night-text-red');
+                    }
                     startFireworks();
                 } else {
-                    // 如果往回翻，可以取消黑夜（可选）
-                    document.getElementById('night-mask').style.opacity = '0';
-                    document.getElementById('sky-decor').style.opacity = '0';
+                    nightMask.style.opacity = '0';
+                    skyDecor.style.opacity = '0';
                 }
                 
                 setTimeout(() => { isAnimating = false; }, 1000);
@@ -177,41 +193,26 @@
 
         function initTouchEvents() {
             let startY = 0;
-            // 兼容手机端滑动
             window.addEventListener('touchstart', e => { startY = e.touches[0].pageY; });
             window.addEventListener('touchend', e => {
                 if (isAnimating) return;
                 let endY = e.changedTouches[0].pageY;
-                if (startY - endY > 50) { // 向上滑 -> 下一段
-                    if (currentIndex < sections.length - 1) {
-                        currentIndex++;
-                        showSection(currentIndex);
-                    }
-                } else if (endY - startY > 50) { // 向下滑 -> 上一段
-                    if (currentIndex > 0) {
-                        currentIndex--;
-                        showSection(currentIndex);
-                    }
+                if (startY - endY > 50) { 
+                    if (currentIndex < sections.length - 1) { currentIndex++; showSection(currentIndex); }
+                } else if (endY - startY > 50) {
+                    if (currentIndex > 0) { currentIndex--; showSection(currentIndex); }
                 }
             });
-            // 兼容电脑滚轮
             window.addEventListener('wheel', e => {
                 if (isAnimating) return;
                 if (e.deltaY > 0) {
-                    if (currentIndex < sections.length - 1) {
-                        currentIndex++;
-                        showSection(currentIndex);
-                    }
+                    if (currentIndex < sections.length - 1) { currentIndex++; showSection(currentIndex); }
                 } else {
-                    if (currentIndex > 0) {
-                        currentIndex--;
-                        showSection(currentIndex);
-                    }
+                    if (currentIndex > 0) { currentIndex--; showSection(currentIndex); }
                 }
             });
         }
 
-        // --- 烟花逻辑 ---
         function startFireworks() {
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
@@ -248,5 +249,4 @@
         }
     </script>
 </body>
-
 </html>
