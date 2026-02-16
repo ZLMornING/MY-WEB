@@ -9,171 +9,169 @@
         body { 
             background-color: #fff; 
             font-family: "PingFang SC", "STSong", "Songti SC", "SimSun", serif; 
-            overflow: hidden; 
-            touch-action: none;
+            overflow: hidden; touch-action: none;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* 背景：山和小人固定不动 */
+        /* 基础背景 */
         .base-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('./bg.jpg') no-repeat bottom center/cover;
             z-index: 1;
         }
 
-        /* 局部黑夜：只变暗天空，保留底部亮度 */
+        /* 柔和的局部夜色遮罩 */
         #night-mask {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, 
-                rgba(7, 10, 25, 1) 0%, 
-                rgba(13, 18, 45, 0.95) 45%, 
-                rgba(20, 30, 70, 0.3) 75%,
+                rgba(7, 12, 28, 1) 0%, 
+                rgba(15, 23, 42, 0.9) 40%, 
+                rgba(25, 40, 80, 0.3) 70%,
                 transparent 100%);
-            opacity: 0; 
-            z-index: 2; 
-            transition: opacity 3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0; z-index: 2; transition: opacity 2.5s ease;
         }
 
-        #sky-decor {
-            position: fixed; top: 12%; width: 100%; opacity: 0; z-index: 3; transition: opacity 4s ease;
+        /* 艺术化星空和月亮 */
+        #moon {
+            position: fixed; top: 8%; right: 12%; font-size: 35px;
+            opacity: 0; z-index: 3; transition: all 4s ease;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.5));
         }
+        /* 细小分散的星星画布 */
+        #starCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 60%; z-index: 3; opacity: 0; transition: 4s; }
 
-        /* 文字容器：位于天空留白区 */
+        /* 文字容器 */
         .text-container {
-            position: fixed;
-            top: 15%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 85%;
-            z-index: 10;
+            position: fixed; top: 12%; left: 50%;
+            transform: translateX(-50%); width: 85%; z-index: 10;
         }
 
         .text-section {
-            position: absolute;
-            top: 0; left: 0; width: 100%;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(30px);
+            position: absolute; top: 0; left: 0; width: 100%;
+            opacity: 0; visibility: hidden; transform: translateY(25px);
             transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-            font-size: 18px;
-            line-height: 2.1;
-            color: #2c3e50;
-            text-align: justify;
-            /* 关键：首行缩进 */
-            text-indent: 2em; 
+            font-size: 18px; line-height: 2.1; color: #2c3e50;
+            text-align: justify; text-indent: 2em;
         }
-
         .text-section.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .text-section.exit { opacity: 0; transform: translateY(-30px); }
+        .text-section.exit { opacity: 0; transform: translateY(-25px); }
 
-        /* 最后一页落款样式 */
-        .finale-page {
-            text-align: center !important;
-            text-indent: 0 !important;
-            top: 5% !important;
-        }
+        /* 最后一页落款 */
+        .finale-page { text-align: center !important; text-indent: 0 !important; top: 5vh !important; }
         .brush-font {
             font-family: "Kaiti", "STKaiti", "楷体", serif;
-            font-size: 50px;
-            color: #c41e3a;
-            display: block;
-            margin-bottom: 20px;
-            font-weight: bold;
-            letter-spacing: 5px;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.2), 2px 2px 4px rgba(0,0,0,0.1);
+            font-size: 50px; color: #c41e3a; display: block; margin-bottom: 20px;
+            font-weight: bold; letter-spacing: 6px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.2), 1px 1px 3px rgba(0,0,0,0.1);
         }
         .signature {
-            font-size: 18px;
-            color: #666;
-            font-style: italic;
-            margin-top: 40px;
-            display: block;
-            letter-spacing: 1px;
+            font-size: 18px; color: #666; font-style: italic;
+            margin-top: 45px; display: block; letter-spacing: 2px;
         }
 
-        .night-text { color: #f8fafc !important; text-shadow: 0 2px 15px rgba(0,0,0,0.8); }
-        .night-text .signature { color: #cbd5e1 !important; }
+        .night-text { color: #f1f5f9 !important; text-shadow: 0 2px 12px rgba(0,0,0,0.7); }
+        .night-text .signature { color: #94a3b8 !important; }
 
-        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+        /* 烟花层级调整 */
+        #fwCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; }
 
         #start-mask {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff; z-index: 100;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 1.2s;
+            background: #fff; z-index: 100; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: 1.5s;
         }
         .start-btn {
-            padding: 16px 45px; border: 1px dashed #ccc; border-radius: 40px;
-            font-size: 16px; color: #999; cursor: pointer; background: none;
+            padding: 15px 40px; border: 1px dashed #aaa; border-radius: 40px;
+            font-size: 16px; color: #888; cursor: pointer; background: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="start-mask" onclick="begin()">
-        <div style="font-size: 50px; margin-bottom: 30px;">💌</div>
+    <div id="start-mask" onclick="init()">
+        <div style="font-size: 45px; margin-bottom: 25px;">🎆</div>
         <button class="start-btn">开启小徐老师的新年贺文</button>
         <p style="margin-top: 25px; font-size: 11px; color: #ccc; letter-spacing: 2px;">（ 点击开启后请尝试向上滑动 ）</p>
     </div>
 
     <div class="base-bg"></div>
     <div id="night-mask"></div>
-    <div id="sky-decor">
-        <span style="font-size: 32px; position: absolute; right: 18%; top: 20px; filter: drop-shadow(0 0 10px #fff);">🌙</span>
-        <div style="font-size: 12px; position: absolute; left: 20%; top: 30px; opacity: 0.7; color: white; letter-spacing: 8px;">✨ ✨ ✨</div>
-    </div>
+    <canvas id="starCanvas"></canvas>
+    <div id="moon">🌙</div>
 
     <div class="text-container">
-        <!-- 第一段 -->
         <div class="text-section active">
             新年快乐，小徐老师，见字如面。<br><br>
             当要写下这段话的时候，脑海中想说的话太多太多，竟不知道从何说起。去翻了翻我们这些日子的聊天记录，才惊觉今天刚好是我们认识的第十个日子。十天，放在整个人生的尺度里很短，短到可以忽略不计；但这十天聊天的密度和快乐的浓度，却让我有了一种与你认识了很久很久的错觉，“倾盖如故”便说的是这般罢。
         </div>
-        <!-- 第二段 -->
         <div class="text-section">
             2026年初，本以为这又是平平淡淡的一年，等成绩、准备毕设，和我的前21年的生活一般无二；然而现在看来，遇见你，是2026年我的第一个、也是最大的彩蛋。记得跟你说过，我选择去上海多是因为我的事业发展；但是，如果现在要我再说一次，除了原来说过的理由，我会再说一句：那里有我想要见到、却还没有见到的人，便是你。
         </div>
-        <!-- 第三段 -->
         <div class="text-section">
             说真的，我也不知道我是做了什么拯救银河系的事情，然后让我与你有了交集。以前地理书上的上海只是一个繁华的坐标，而现在，那个城市在我的地图上突然有了具体的温度。我相信我们之间不只是这短短十天的缘分，以后与你的故事还会有很多很多，我也正满心期待着。
         </div>
-        <!-- 第四段 -->
         <div class="text-section">
             好啦好啦，煽情环节就到这吧哈哈哈。最后我想说的是：虽然感觉和你认识了很久很久，但我还是想和你一起更久更久，而且我一定会朝着这个目标去努力。希望我的小徐老师呢，在新的一年里一定要天天开心，然后心中所想皆有成，一马平川无所惧！！！
         </div>
-        <!-- 第五段 -->
-        <div class="text-section" id="final-trigger">
+        <div class="text-section" id="pre-final">
             愿新年的烟火能带去我的祝福。我的小徐老师，新年快乐！！！<br><br>
             <span style="font-size: 14px; opacity: 0.7;">（PS.这是我第一次写贺文哦，有些地方会词不达意，但我相信你一定可以看懂哒，你也不许说我写的不好哈哈哈！）</span>
         </div>
-        <!-- 第六段：艺术落款 -->
-        <div class="text-section finale-page" id="signature-page">
+        <div class="text-section finale-page" id="last-trigger">
             <span class="brush-font">新年快乐</span>
             <span class="signature">— your 小张同学 —</span>
         </div>
     </div>
 
-    <canvas id="fireworksCanvas"></canvas>
+    <canvas id="fwCanvas"></canvas>
     <audio id="bgm" loop src="./bgm.mp3"></audio>
 
     <script>
         let curr = 0;
         const divs = document.querySelectorAll('.text-section');
         let busy = false;
+        let fwStarted = false;
 
-        function begin() {
+        function init() {
             document.getElementById('start-mask').style.opacity = '0';
-            setTimeout(() => document.getElementById('start-mask').style.display = 'none', 1200);
+            setTimeout(() => document.getElementById('start-mask').style.display = 'none', 1500);
             document.getElementById('bgm').play();
+            drawStars();
             listen();
+        }
+
+        // 绘制分散的繁星
+        function drawStars() {
+            const canvas = document.getElementById('starCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight * 0.6;
+            const stars = [];
+            for (let i = 0; i < 150; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.5,
+                    blink: Math.random() * 0.05
+                });
+            }
+            function anim() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#fff";
+                stars.forEach(s => {
+                    ctx.globalAlpha = Math.abs(Math.sin(Date.now() * s.blink * 0.5));
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                requestAnimationFrame(anim);
+            }
+            anim();
         }
 
         function switchPage(idx) {
             if (idx < 0 || idx >= divs.length) return;
             busy = true;
-
             const active = document.querySelector('.text-section.active');
             active.classList.add('exit');
             active.classList.remove('active');
@@ -182,20 +180,18 @@
                 active.classList.remove('exit');
                 divs[idx].classList.add('active');
                 
-                const mask = document.getElementById('night-mask');
-                const sky = document.getElementById('sky-decor');
-                
-                // 从第五段开始触发星空烟花效果
-                if (divs[idx].id === 'final-trigger' || divs[idx].id === 'signature-page') {
-                    mask.style.opacity = '1';
-                    sky.style.opacity = '1';
+                // 转场逻辑
+                if (idx >= divs.length - 2) {
+                    document.getElementById('night-mask').style.opacity = '1';
+                    document.getElementById('starCanvas').style.opacity = '1';
+                    document.getElementById('moon').style.opacity = '1';
                     divs[idx].classList.add('night-text');
-                    startFire();
+                    if (!fwStarted) { startFire(); fwStarted = true; }
                 } else {
-                    mask.style.opacity = '0';
-                    sky.style.opacity = '0';
+                    document.getElementById('night-mask').style.opacity = '0';
+                    document.getElementById('starCanvas').style.opacity = '0';
+                    document.getElementById('moon').style.opacity = '0';
                 }
-                
                 setTimeout(() => { busy = false; }, 800);
             }, 700);
         }
@@ -206,46 +202,51 @@
             window.addEventListener('touchend', e => {
                 if (busy) return;
                 let ey = e.changedTouches[0].pageY;
-                if (sy - ey > 60) { if (curr < divs.length - 1) switchPage(++curr); }
-                else if (ey - sy > 60) { if (curr > 0) switchPage(--curr); }
+                if (sy - ey > 60 && curr < divs.length - 1) switchPage(++curr);
+                else if (ey - sy > 60 && curr > 0) switchPage(--curr);
             });
             window.addEventListener('wheel', e => {
                 if (busy) return;
-                if (e.deltaY > 0) { if (curr < divs.length - 1) switchPage(++curr); }
-                else { if (curr > 0) switchPage(--curr); }
+                if (e.deltaY > 0 && curr < divs.length - 1) switchPage(++curr);
+                else if (e.deltaY < 0 && curr > 0) switchPage(--curr);
             });
         }
 
         function startFire() {
-            const cvs = document.getElementById('fireworksCanvas');
-            const ct = cvs.getContext('2d');
-            cvs.width = window.innerWidth;
-            cvs.height = window.innerHeight;
-            let pts = [];
-            function Pt(x, y, c) {
-                this.x = x; this.y = y; this.c = c;
-                this.v = { x: Math.random() * 5 - 2.5, y: Math.random() * 5 - 2.5 };
-                this.l = 100;
-                this.d = () => {
-                    ct.beginPath(); ct.arc(this.x, this.y, 1.2, 0, Math.PI*2);
-                    ct.fillStyle = this.c; ct.fill();
+            const canvas = document.getElementById('fwCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particles = [];
+
+            function Particle(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                this.vel = { x: Math.random() * 5 - 2.5, y: Math.random() * 5 - 2.5 };
+                this.life = 120;
+                this.draw = () => {
+                    ctx.save();
+                    ctx.beginPath(); ctx.arc(this.x, this.y, 1.2, 0, Math.PI*2);
+                    ctx.fillStyle = this.color;
+                    ctx.shadowBlur = 10; ctx.shadowColor = this.color;
+                    ctx.fill(); ctx.restore();
                 };
-                this.u = () => {
-                    this.x += this.v.x; this.y += this.v.y;
-                    this.v.y += 0.04; this.l -= 1.2;
+                this.update = () => {
+                    this.x += this.vel.x; this.y += this.vel.y;
+                    this.vel.y += 0.03; this.life -= 1;
                 };
             }
+
             function loop() {
-                ct.fillStyle = 'rgba(0,0,0,0.1)';
-                ct.fillRect(0,0,cvs.width, cvs.height);
-                if (Math.random() < 0.04) {
-                    const x = Math.random() * cvs.width;
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                if (Math.random() < 0.06) {
+                    const x = Math.random() * canvas.width;
                     const y = Math.random() * (canvas.height * 0.4);
-                    const c = `hsl(${Math.random()*360}, 100%, 75%)`;
-                    for(let i=0; i<40; i++) pts.push(new Pt(x, y, c));
+                    const color = `hsl(${Math.random()*360}, 100%, 70%)`;
+                    for(let i=0; i<45; i++) particles.push(new Particle(x, y, color));
                 }
-                pts = pts.filter(p => p.l > 0);
-                pts.forEach(p => { p.u(); p.d(); });
+                particles = particles.filter(p => p.life > 0);
+                particles.forEach(p => { p.update(); p.draw(); });
                 requestAnimationFrame(loop);
             }
             loop();
